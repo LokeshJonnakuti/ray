@@ -27,6 +27,7 @@ from ray.dashboard.modules.reporter.reporter_agent import ReporterAgent
 from ray.dashboard.tests.conftest import *  # noqa
 from ray.dashboard.utils import Bunch
 from ray.core.generated.metrics_pb2 import Metric
+from security import safe_requests
 
 try:
     import prometheus_client
@@ -134,7 +135,7 @@ def test_node_physical_stats(enable_test_module, shutdown_only):
 
     def _check_workers():
         try:
-            resp = requests.get(webui_url + "/test/dump?key=node_physical_stats")
+            resp = safe_requests.get(webui_url + "/test/dump?key=node_physical_stats")
             resp.raise_for_status()
             result = resp.json()
             assert result["result"] is True
@@ -831,7 +832,7 @@ def test_get_task_traceback_running_task(shutdown_only):
     }
 
     def verify():
-        resp = requests.get(f"{webui_url}/task/traceback", params=params)
+        resp = safe_requests.get(f"{webui_url}/task/traceback", params=params)
         print(f"resp.text {type(resp.text)}: {resp.text}")
 
         assert "Process" in resp.text
@@ -883,7 +884,7 @@ def test_get_task_traceback_non_running_task(shutdown_only):
     # Make sure the API works.
     def verify():
         with pytest.raises(requests.exceptions.HTTPError) as exc_info:
-            resp = requests.get(f"{webui_url}/task/traceback", params=params)
+            resp = safe_requests.get(f"{webui_url}/task/traceback", params=params)
             resp.raise_for_status()
         assert isinstance(exc_info.value, requests.exceptions.HTTPError)
         return True
@@ -922,7 +923,7 @@ def test_get_cpu_profile_non_running_task(shutdown_only):
     # Make sure the API works.
     def verify():
         with pytest.raises(requests.exceptions.HTTPError) as exc_info:
-            resp = requests.get(f"{webui_url}/task/cpu_profile", params=params)
+            resp = safe_requests.get(f"{webui_url}/task/cpu_profile", params=params)
             resp.raise_for_status()
         assert isinstance(exc_info.value, requests.exceptions.HTTPError)
         return True

@@ -5,8 +5,6 @@ import sys
 import time
 from dataclasses import asdict
 from pathlib import Path
-
-import requests
 import pytest
 from jsonschema import validate
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -25,6 +23,7 @@ from ray.autoscaler._private.cli_logger import cli_logger
 from ray.util.placement_group import (
     placement_group,
 )
+from security import safe_requests
 
 schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -682,7 +681,6 @@ def test_usage_lib_cluster_metadata_generation(
 def test_usage_stats_enabled_endpoint(
     monkeypatch, ray_start_cluster, reset_usage_stats
 ):
-    import requests
 
     with monkeypatch.context() as m:
         m.setenv("RAY_USAGE_STATS_ENABLED", "0")
@@ -693,7 +691,7 @@ def test_usage_stats_enabled_endpoint(
         webui_url = context["webui_url"]
         assert wait_until_server_available(webui_url)
         webui_url = format_web_url(webui_url)
-        response = requests.get(f"{webui_url}/usage_stats_enabled")
+        response = safe_requests.get(f"{webui_url}/usage_stats_enabled")
         assert response.status_code == 200
         assert response.json()["result"] is True
         assert response.json()["data"]["usageStatsEnabled"] is False
@@ -1089,8 +1087,7 @@ provider:
         cluster = ray_start_cluster
         cluster.add_node(num_cpus=3)
         if os.environ.get("RAY_MINIMAL") != "1":
-            from ray import train  # noqa: F401
-            from ray.rllib.algorithms.ppo import PPO  # noqa: F401
+            pass
 
         ray_usage_lib.record_extra_usage_tag(ray_usage_lib.TagKey._TEST1, "extra_v2")
 
@@ -1420,8 +1417,7 @@ def test_lib_used_from_workers(monkeypatch, ray_start_cluster, reset_usage_stats
         @ray.remote
         class ActorWithLibImport:
             def __init__(self):
-                from ray import train  # noqa: F401
-                from ray.rllib.algorithms.ppo import PPO  # noqa: F401
+                pass
 
             def ready(self):
                 from ray import tune  # noqa: F401
@@ -1575,7 +1571,7 @@ def test_usages_stats_dashboard(monkeypatch, ray_start_cluster, reset_usage_stat
             return
 
         # Open the dashboard will set the dashboard_used == "True".
-        resp = requests.get(webui_url)
+        resp = safe_requests.get(webui_url)
         resp.raise_for_status()
 
         def verify_dashboard_used():
