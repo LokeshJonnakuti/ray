@@ -1,7 +1,6 @@
 import logging
 import pathlib
 import json
-import random
 import string
 import socket
 import os
@@ -13,12 +12,13 @@ from datetime import datetime
 from google.protobuf.json_format import MessageToDict, Parse
 
 from ray.core.generated.event_pb2 import Event
+import secrets
 
 global_logger = logging.getLogger(__name__)
 
 
 def get_event_id():
-    return "".join([random.choice(string.hexdigits) for _ in range(36)])
+    return "".join([secrets.choice(string.hexdigits) for _ in range(36)])
 
 
 class EventLoggerAdapter:

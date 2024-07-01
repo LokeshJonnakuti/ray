@@ -7,7 +7,6 @@ import numpy as np
 import os
 import pickle
 import pytest
-import random
 import unittest
 import sys
 import time
@@ -32,6 +31,7 @@ from ray.tune.utils.util import flatten_dict
 
 # Import psutil after ray so the packaged version is used.
 import psutil
+import secrets
 
 MB = 1024**2
 
@@ -59,7 +59,7 @@ class PopulationBasedTrainingMemoryTest(unittest.TestCase):
             def setup(self, config):
                 # Make sure this is large enough so ray uses object store
                 # instead of in-process store.
-                self.large_object = random.getrandbits(int(10e6))
+                self.large_object = secrets.SystemRandom().getrandbits(int(10e6))
                 self.iter = 0
                 self.a = config["a"]
 
@@ -246,7 +246,7 @@ class PopulationBasedTrainingSynchTest(unittest.TestCase):
 
         param_a = MockParam(param)
 
-        random.seed(100)
+        secrets.SystemRandom().seed(100)
         np.random.seed(100)
         analysis = tune.run(
             self.MockTrainingFuncSync,
@@ -376,7 +376,7 @@ class PopulationBasedTrainingSynchTest(unittest.TestCase):
                 ),
             ),
         )
-        random.seed(100)
+        secrets.SystemRandom().seed(100)
         np.random.seed(1000)
         results = tuner.fit()
         assert not results.errors
@@ -473,7 +473,7 @@ class PopulationBasedTrainingResumeTest(unittest.TestCase):
         param_a = MockParam([10, 20, 30, 40])
         param_b = MockParam([1.2, 0.9, 1.1, 0.8])
 
-        random.seed(100)
+        secrets.SystemRandom().seed(100)
         np.random.seed(1000)
         checkpoint_config = CheckpointConfig(
             num_to_keep=2,
@@ -529,7 +529,7 @@ class PopulationBasedTrainingResumeTest(unittest.TestCase):
         )
         param_a = MockParam([10, 20, 30, 40])
         param_b = MockParam([1.2, 0.9, 1.1, 0.8])
-        random.seed(100)
+        secrets.SystemRandom().seed(100)
         np.random.seed(1000)
         checkpoint_config = CheckpointConfig(
             num_to_keep=2,

@@ -1,10 +1,10 @@
-import random
 
 import numpy as np
 from ray.rllib.examples.env.coin_game_non_vectorized_env import CoinGame, AsymCoinGame
 from ray.rllib.env.wrappers.uncertainty_wrappers import (
     add_RewardUncertaintyEnvClassWrapper,
 )
+import secrets
 
 
 def init_env(max_steps, env_class, seed=None, grid_size=3):
@@ -39,7 +39,7 @@ def test_add_RewardUncertaintyEnvClassWrapper():
         for _ in range(n_steps):
             step_i += 1
             actions = {
-                policy_id: random.randint(0, env.NUM_ACTIONS - 1)
+                policy_id: secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1)
                 for policy_id in env.players_ids
             }
             obs, reward, done, truncated, info = env.step(actions)

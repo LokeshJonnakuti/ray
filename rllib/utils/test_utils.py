@@ -9,7 +9,6 @@ import logging
 import numpy as np
 import os
 import pprint
-import random
 import re
 import time
 import tree  # pip install dm_tree
@@ -41,6 +40,7 @@ from ray.rllib.utils.error import UnsupportedSpaceException
 
 
 from ray.tune import CLIReporter, run_experiments
+import secrets
 
 
 if TYPE_CHECKING:
@@ -462,7 +462,7 @@ def check_compute_single_action(
         for method_to_test in ["single"] + (["input_dict"] if what is pol else []):
             for explore in [True, False]:
                 for full_fetch in [False, True] if what is algorithm else [False]:
-                    timestep = random.randint(0, 100000)
+                    timestep = secrets.SystemRandom().randint(0, 100000)
                     for unsquash in [True, False, None]:
                         for clip in [False] if unsquash else [True, False, None]:
                             print("-" * 80)

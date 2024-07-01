@@ -2,7 +2,6 @@ import collections
 import hashlib
 import json
 import os
-import random
 import string
 import subprocess
 import time
@@ -10,6 +9,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 import requests
 from ray_release.logger import logger
+import secrets
 
 if TYPE_CHECKING:
     from anyscale.sdk.anyscale_client.sdk import AnyscaleSDK
@@ -167,7 +167,7 @@ def python_version_str(python_version: Tuple[int, int]) -> str:
 
 
 def generate_tmp_cloud_storage_path() -> str:
-    return "".join(random.choice(string.ascii_lowercase) for i in range(10))
+    return "".join(secrets.choice(string.ascii_lowercase) for i in range(10))
 
 
 def join_cloud_storage_paths(*paths: str):

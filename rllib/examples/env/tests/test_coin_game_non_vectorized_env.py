@@ -2,10 +2,10 @@
 # Contribution by the Center on Long-Term Risk:
 # https://github.com/longtermrisk/marltoolbox
 ##########
-import random
 
 import numpy as np
 from ray.rllib.examples.env.coin_game_non_vectorized_env import CoinGame, AsymCoinGame
+import secrets
 
 # TODO add tests for grid_size != 3
 
@@ -81,7 +81,7 @@ def test_step():
         assert_logger_buffer_size(env, n_steps=0)
 
         actions = {
-            policy_id: random.randint(0, env.NUM_ACTIONS - 1)
+            policy_id: secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1)
             for policy_id in env.players_ids
         }
         obs, reward, done, truncated, info = env.step(actions)
@@ -102,7 +102,7 @@ def test_multiple_steps():
 
         for step_i in range(1, n_steps, 1):
             actions = {
-                policy_id: random.randint(0, env.NUM_ACTIONS - 1)
+                policy_id: secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1)
                 for policy_id in env.players_ids
             }
             obs, reward, done, truncated, info = env.step(actions)
@@ -125,7 +125,7 @@ def test_multiple_episodes():
         for _ in range(n_steps):
             step_i += 1
             actions = {
-                policy_id: random.randint(0, env.NUM_ACTIONS - 1)
+                policy_id: secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1)
                 for policy_id in env.players_ids
             }
             obs, reward, done, truncated, info = env.step(actions)

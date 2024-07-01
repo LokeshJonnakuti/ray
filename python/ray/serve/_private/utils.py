@@ -5,7 +5,6 @@ import inspect
 import logging
 import math
 import os
-import random
 import string
 import threading
 import time
@@ -28,6 +27,7 @@ from ray.exceptions import RayTaskError
 from ray.serve._private.constants import HTTP_PROXY_TIMEOUT, SERVE_LOGGER_NAME
 from ray.types import ObjectRef
 from ray.util.serialization import StandaloneSerializationContext
+import secrets
 
 try:
     import pandas as pd
@@ -134,7 +134,7 @@ def block_until_http_ready(
 
 
 def get_random_letters(length=6):
-    return "".join(random.choices(string.ascii_letters, k=length))
+    return "".join(secrets.SystemRandom().choices(string.ascii_letters, k=length))
 
 
 def format_actor_name(actor_name, controller_name=None, *modifiers):

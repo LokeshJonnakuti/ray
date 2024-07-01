@@ -10,7 +10,6 @@ from ray.tune.schedulers import PopulationBasedTraining
 import argparse
 import os
 from filelock import FileLock
-import random
 import torch
 import torch.nn as nn
 import torch.nn.parallel
@@ -21,6 +20,7 @@ import numpy as np
 from common import beta1, MODEL_PATH
 from common import demo_gan, get_data_loader, plot_images, train_func, weights_init
 from common import Discriminator, Generator, Net
+import secrets
 
 
 # __Trainable_begin__
@@ -156,10 +156,10 @@ if __name__ == "__main__":
         ),
         param_space={
             "netG_lr": tune.sample_from(
-                lambda spec: random.choice([0.0001, 0.0002, 0.0005])
+                lambda spec: secrets.choice([0.0001, 0.0002, 0.0005])
             ),
             "netD_lr": tune.sample_from(
-                lambda spec: random.choice([0.0001, 0.0002, 0.0005])
+                lambda spec: secrets.choice([0.0001, 0.0002, 0.0005])
             ),
             "mnist_model_ref": mnist_model_ref,
             "data_dir": args.data_dir,

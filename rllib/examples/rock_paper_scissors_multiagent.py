@@ -10,7 +10,6 @@ This demonstrates running the following policies in competition:
 import argparse
 import os
 from pettingzoo.classic import rps_v2
-import random
 
 import ray
 from ray import air, tune
@@ -31,6 +30,7 @@ from ray.rllib.policy.policy import PolicySpec
 from ray.rllib.utils.framework import try_import_tf, try_import_torch
 from ray.rllib.utils.test_utils import check_learning_achieved
 from ray.tune.registry import register_env
+import secrets
 
 tf1, tf, tfv = try_import_tf()
 torch, _ = try_import_torch()
@@ -96,7 +96,7 @@ def run_heuristic_vs_learned(args, use_lstm=False, algorithm_config=None):
         if agent_id == "player_0":
             return "learned"
         else:
-            return random.choice(["always_same", "beat_last"])
+            return secrets.choice(["always_same", "beat_last"])
 
     config = (
         (algorithm_config or PPOConfig())

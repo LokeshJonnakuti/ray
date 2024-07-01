@@ -1,6 +1,4 @@
 from typing import Optional
-
-import random
 import pytest
 
 import ray
@@ -8,6 +6,7 @@ from ray import train
 from ray.train import DataConfig, ScalingConfig
 from ray.data import DataIterator
 from ray.train.data_parallel_trainer import DataParallelTrainer
+import secrets
 
 
 @pytest.fixture
@@ -219,7 +218,7 @@ def test_per_epoch_preprocessing(ray_start_4_cpus):
     test.fit()
 
     ds = ray.data.range(100, parallelism=100).map(
-        lambda x: {"id": x["id"] * random.random()}
+        lambda x: {"id": x["id"] * secrets.SystemRandom().random()}
     )
     test = TestRandom(2, True, datasets={"train": ds})
     test.fit()
@@ -249,7 +248,7 @@ def test_materialized_preprocessing(ray_start_4_cpus):
     test.fit()
 
     ds = ray.data.range(100, parallelism=100).map(
-        lambda x: {"id": x["id"] * random.random()}
+        lambda x: {"id": x["id"] * secrets.SystemRandom().random()}
     )
     ds = ds.materialize()
     test = TestRandom(

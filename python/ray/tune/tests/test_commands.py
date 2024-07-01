@@ -1,11 +1,11 @@
 import click
 import os
 import pytest
-import random
 import subprocess
 import sys
 import time
 from unittest import mock
+import secrets
 
 try:
     from cStringIO import StringIO
@@ -55,9 +55,9 @@ def test_time(start_ray, tmpdir, monkeypatch):
                 ray.train.report(
                     {
                         "epoch": i,
-                        "a": random.random(),
-                        "b/c": random.random(),
-                        "d": random.random(),
+                        "a": secrets.SystemRandom().random(),
+                        "b/c": secrets.SystemRandom().random(),
+                        "d": secrets.SystemRandom().random(),
                     },
                     checkpoint=checkpoint,
                 )
