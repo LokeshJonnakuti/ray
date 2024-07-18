@@ -85,7 +85,7 @@ class RuntimeEnvContext:
         logger.debug(f"Exec'ing worker with command: {command_str}")
         if sys.platform == "win32":
             cmd = [*self.command_prefix, executable, *passthrough_args]
-            subprocess.Popen(cmd, shell=True).wait()
+            subprocess.Popen(cmd, shell=False).wait()
         else:
             # PyCharm will monkey patch the os.execvp at
             # .pycharm_helpers/pydev/_pydev_bundle/pydev_monkey.py
