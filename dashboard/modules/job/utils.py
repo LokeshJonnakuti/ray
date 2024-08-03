@@ -77,7 +77,7 @@ def file_tail_iterator(path: str) -> Iterator[Optional[List[str]]]:
             if curr_line is None:
                 # Only read the next line in the file
                 # if there's no remaining "curr_line" to process
-                curr_line = f.readline()
+                curr_line = f.readline(5_000_000)
             new_chunk_char_count = chunk_char_count + len(curr_line)
             if new_chunk_char_count > MAX_CHUNK_CHAR_LENGTH:
                 # Too many characters, return 20000 in this chunk, and then
