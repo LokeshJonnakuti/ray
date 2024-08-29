@@ -188,7 +188,7 @@ def test_deployment_function_node_build(serve_instance):
     app = Forward.bind(Forward.bind(Forward.bind(no_op.bind())))
 
     serve.run(app)
-    assert requests.get("http://localhost:8000/").text == "No-op"
+    assert requests.get("http://localhost:8000/", timeout=60).text == "No-op"
 
 
 if __name__ == "__main__":
