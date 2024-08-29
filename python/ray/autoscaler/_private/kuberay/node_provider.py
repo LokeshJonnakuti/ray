@@ -417,7 +417,7 @@ class KubeRayNodeProvider(BatchingNodeProvider):  # type: ignore
     def _get(self, path: str) -> Dict[str, Any]:
         """Wrapper for REST GET of resource with proper headers."""
         url = url_from_resource(namespace=self.namespace, path=path)
-        result = requests.get(url, headers=self.headers, verify=self.verify)
+        result = requests.get(url, headers=self.headers, verify=self.verify, timeout=60)
         if not result.status_code == 200:
             result.raise_for_status()
         return result.json()
@@ -430,7 +430,7 @@ class KubeRayNodeProvider(BatchingNodeProvider):  # type: ignore
             json.dumps(payload),
             headers={**self.headers, "Content-type": "application/json-patch+json"},
             verify=self.verify,
-        )
+        timeout=60)
         if not result.status_code == 200:
             result.raise_for_status()
         return result.json()

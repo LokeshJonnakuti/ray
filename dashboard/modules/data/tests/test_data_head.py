@@ -34,7 +34,7 @@ def test_get_datasets():
     ds._set_name("data_head_test")
     ds.materialize()
 
-    data = requests.get(DATA_HEAD_URLS["GET"]).json()
+    data = requests.get(DATA_HEAD_URLS["GET"], timeout=60).json()
 
     assert len(data["datasets"]) == 1
     assert sorted(data["datasets"][0].keys()) == sorted(RESPONSE_SCHEMA)
@@ -55,7 +55,7 @@ def test_get_datasets():
     assert operators[1]["operator"] == "ReadRange->MapBatches(<lambda>)1"
 
     ds.map_batches(lambda x: x).materialize()
-    data = requests.get(DATA_HEAD_URLS["GET"]).json()
+    data = requests.get(DATA_HEAD_URLS["GET"], timeout=60).json()
 
     assert len(data["datasets"]) == 2
     dataset = data["datasets"][1]

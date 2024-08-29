@@ -1348,7 +1348,7 @@ def _start_ray_worker_nodes(
                     json={
                         "spark_job_group_id": spark_job_group_id,
                     },
-                )
+                timeout=60)
 
             # Note:
             # When a pyspark job cancelled, the UDF python worker process are killed by
