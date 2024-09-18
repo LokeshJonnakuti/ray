@@ -23,6 +23,7 @@ from ray.serve.tests.common.utils import (
     receiver_app,
     start_telemetry_app,
 )
+from security import safe_requests
 
 
 def test_fastapi_detected(manage_ray_with_telemetry):
@@ -541,7 +542,7 @@ def test_multiplexed_detect(manage_ray_with_telemetry):
     )
 
     headers = {SERVE_MULTIPLEXED_MODEL_ID: "1"}
-    resp = requests.get("http://localhost:8000/app", headers=headers)
+    resp = safe_requests.get("http://localhost:8000/app", headers=headers)
     assert resp.status_code == 200
 
     wait_for_condition(

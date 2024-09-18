@@ -7,7 +7,6 @@ https://docs.ray.io/en/master/serve/tutorials/rllib.html
 
 import argparse
 import gymnasium as gym
-import requests
 from starlette.requests import Request
 
 import ray
@@ -16,6 +15,7 @@ import ray.rllib.algorithms.algorithm_config as AlgorithmConfig
 from ray.rllib.algorithms.dqn import DQNConfig
 from ray.rllib.env.wrappers.atari_wrappers import FrameStack, WarpFrame
 from ray import serve
+from security import safe_requests
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     while True:
         print("-> Requesting action for obs ...")
         # Send a request to serve.
-        resp = requests.get(
+        resp = safe_requests.get(
             "http://localhost:8000/mspacman-rllib-policy",
             json={"observation": obs.tolist()},
         )

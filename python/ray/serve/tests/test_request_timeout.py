@@ -18,6 +18,7 @@ from ray.serve._private.common import ApplicationStatus
 from ray.serve.schema import ServeInstanceDetails
 from ray.serve.tests.common.utils import send_signal_on_cancellation
 from ray.util.state import list_tasks
+from security import safe_requests
 
 
 @ray.remote
@@ -138,7 +139,7 @@ def test_with_rest_api(ray_start_stop):
     ServeSubmissionClient("http://localhost:8265").deploy_applications(config)
 
     def application_running():
-        response = requests.get(
+        response = safe_requests.get(
             "http://localhost:52365/api/serve/applications/", timeout=15
         )
         assert response.status_code == 200
@@ -223,7 +224,7 @@ def test_streaming_request_already_sent_and_timed_out(ray_instance, shutdown_ser
 
     serve.run(SleepForNSeconds.bind(0.11))  # 0.11s > 0.1s timeout
 
-    r = requests.get("http://localhost:8000", stream=True)
+    r = safe_requests.get("http://localhost:8000", stream=True)
     iterator = r.iter_content(chunk_size=None, decode_unicode=True)
 
     # The first chunk should be received successfully.

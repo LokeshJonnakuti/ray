@@ -23,6 +23,7 @@ from ray.autoscaler.tags import (
     STATUS_UPDATE_FAILED,
     TAG_RAY_USER_NODE_TYPE,
 )
+from security import safe_requests
 
 # Key for KubeRay label that identifies a Ray pod as head or worker.
 KUBERAY_LABEL_KEY_KIND = "ray.io/node-type"
@@ -417,7 +418,7 @@ class KubeRayNodeProvider(BatchingNodeProvider):  # type: ignore
     def _get(self, path: str) -> Dict[str, Any]:
         """Wrapper for REST GET of resource with proper headers."""
         url = url_from_resource(namespace=self.namespace, path=path)
-        result = requests.get(url, headers=self.headers, verify=self.verify)
+        result = safe_requests.get(url, headers=self.headers, verify=self.verify)
         if not result.status_code == 200:
             result.raise_for_status()
         return result.json()

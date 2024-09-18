@@ -37,6 +37,7 @@ from ray.util.state.common import (
     dict_to_state,
 )
 from ray.util.state.exception import RayStateApiException, ServerUnavailable
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -1282,7 +1283,7 @@ def get_log(
         if option_val is not None:
             options_dict[field.name] = option_val
 
-    with requests.get(
+    with safe_requests.get(
         f"{api_server_url}/api/v0/logs/{media_type}?"
         f"{urllib.parse.urlencode(options_dict)}",
         stream=True,
@@ -1352,7 +1353,7 @@ def list_logs(
         options_dict["glob"] = glob_filter
     options_dict["timeout"] = timeout
 
-    r = requests.get(
+    r = safe_requests.get(
         f"{api_server_url}/api/v0/logs?{urllib.parse.urlencode(options_dict)}"
     )
     # TODO(rickyx): we could do better at error handling here.

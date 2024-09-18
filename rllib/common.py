@@ -5,11 +5,11 @@ import os.path
 import tempfile
 import typer
 from typing import Optional
-import requests
 
 
 from ray.tune.experiment.config_parser import _make_parser
 from ray.tune.result import DEFAULT_RESULTS_DIR
+from security import safe_requests
 
 
 class FrameworkEnum(str, Enum):
@@ -86,7 +86,7 @@ def download_example_file(
             ), f"`example_url` ({example_url}) must be a python or yaml file!"
             temp_file = tempfile.NamedTemporaryFile(suffix=".py")
 
-        r = requests.get(example_url)
+        r = safe_requests.get(example_url)
         with open(temp_file.name, "wb") as f:
             print(r.content)
             f.write(r.content)

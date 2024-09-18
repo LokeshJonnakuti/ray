@@ -18,6 +18,7 @@ from ray.serve._private.constants import SERVE_DEFAULT_APP_NAME
 from ray.serve.deployment import Application
 from ray.serve.exceptions import RayServeException
 from ray.serve.handle import DeploymentHandle, RayServeHandle
+from security import safe_requests
 
 
 @pytest.fixture
@@ -159,7 +160,7 @@ def test_deploy_function_no_params(serve_instance, use_async):
     )
 
     assert (
-        requests.get(f"http://localhost:8000/{deployment_cls.name}").text
+        safe_requests.get(f"http://localhost:8000/{deployment_cls.name}").text
         == expected_output
     )
     assert handle.remote().result() == expected_output
@@ -179,7 +180,7 @@ def test_deploy_function_no_params_call_with_param(serve_instance, use_async):
     )
 
     assert (
-        requests.get(f"http://localhost:8000/{deployment_cls.name}").text
+        safe_requests.get(f"http://localhost:8000/{deployment_cls.name}").text
         == expected_output
     )
     with pytest.raises(
@@ -202,10 +203,10 @@ def test_deploy_class_no_params(serve_instance, use_async):
         use_new_handle_api=True,
     )
 
-    assert requests.get(f"http://127.0.0.1:8000/{deployment_cls.name}").json() == {
+    assert safe_requests.get(f"http://127.0.0.1:8000/{deployment_cls.name}").json() == {
         "count": 1
     }
-    assert requests.get(f"http://127.0.0.1:8000/{deployment_cls.name}").json() == {
+    assert safe_requests.get(f"http://127.0.0.1:8000/{deployment_cls.name}").json() == {
         "count": 2
     }
     assert handle.remote().result() == {"count": 3}
@@ -587,7 +588,7 @@ def test_application_route_prefix_override(serve_instance, ingress_route, app_ro
         routes = requests.get("http://localhost:8000/-/routes").json()
         assert len(routes) == 0
     else:
-        assert requests.get(f"http://localhost:8000{app_route}").text == "hello"
+        assert safe_requests.get(f"http://localhost:8000{app_route}").text == "hello"
 
 
 @pytest.mark.parametrize("ingress_route", ["/hello", "/"])
@@ -607,7 +608,7 @@ def test_application_route_prefix_override1(serve_instance, ingress_route):
         routes = requests.get("http://localhost:8000/-/routes").json()
         assert len(routes) == 0
     else:
-        assert requests.get(f"http://localhost:8000{ingress_route}").text == "hello"
+        assert safe_requests.get(f"http://localhost:8000{ingress_route}").text == "hello"
 
 
 class TestAppBuilder:
