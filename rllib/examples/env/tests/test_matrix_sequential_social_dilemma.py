@@ -2,7 +2,6 @@
 # Contribution by the Center on Long-Term Risk:
 # https://github.com/longtermrisk/marltoolbox
 ##########
-import random
 
 from ray.rllib.examples.env.matrix_sequential_social_dilemma import (
     IteratedPrisonersDilemma,
@@ -10,6 +9,7 @@ from ray.rllib.examples.env.matrix_sequential_social_dilemma import (
     IteratedStagHunt,
     IteratedBoS,
 )
+import secrets
 
 ENVS = [IteratedPrisonersDilemma, IteratedChicken, IteratedStagHunt, IteratedBoS]
 
@@ -57,7 +57,7 @@ def test_step():
         assert_logger_buffer_size_two_players(env, n_steps=0)
 
         actions = {
-            policy_id: random.randint(0, env.NUM_ACTIONS - 1)
+            policy_id: secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1)
             for policy_id in env.players_ids
         }
         obs, reward, done, truncated, info = env.step(actions)
@@ -78,7 +78,7 @@ def test_multiple_steps():
 
         for step_i in range(1, n_steps, 1):
             actions = {
-                policy_id: random.randint(0, env.NUM_ACTIONS - 1)
+                policy_id: secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1)
                 for policy_id in env.players_ids
             }
             obs, reward, done, truncated, info = env.step(actions)
@@ -101,7 +101,7 @@ def test_multiple_episodes():
         for _ in range(n_steps):
             step_i += 1
             actions = {
-                policy_id: random.randint(0, env.NUM_ACTIONS - 1)
+                policy_id: secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1)
                 for policy_id in env.players_ids
             }
             obs, reward, done, truncated, info = env.step(actions)

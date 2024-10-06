@@ -3,7 +3,6 @@ import enum
 import logging
 import math
 import pickle
-import random
 import time
 from abc import ABC, abstractmethod
 from collections import defaultdict, deque
@@ -43,6 +42,7 @@ from ray.serve._private.utils import JavaActorHandleProxy, MetricsPusher
 from ray.serve.generated.serve_pb2 import DeploymentRoute
 from ray.serve.generated.serve_pb2 import RequestMetadata as RequestMetadataProto
 from ray.util import metrics
+import secrets
 
 logger = logging.getLogger(SERVE_LOGGER_NAME)
 
@@ -564,8 +564,7 @@ class PowerOfTwoChoicesReplicaScheduler(ReplicaScheduler):
             entered_backoff = False
             backoff_index = 0
             multiplexed_start_matching_time = None
-            multiplexed_matching_timeout = random.uniform(
-                RAY_SERVE_MULTIPLEXED_MODEL_ID_MATCHING_TIMEOUT_S,
+            multiplexed_matching_timeout = secrets.SystemRandom().uniform(RAY_SERVE_MULTIPLEXED_MODEL_ID_MATCHING_TIMEOUT_S,
                 RAY_SERVE_MULTIPLEXED_MODEL_ID_MATCHING_TIMEOUT_S * 2,
             )
             tried_same_node = False
@@ -667,8 +666,7 @@ class PowerOfTwoChoicesReplicaScheduler(ReplicaScheduler):
                     candidate_replica_ids = self._replica_id_set
 
                 if candidate_replica_ids:
-                    chosen_ids = random.sample(
-                        list(candidate_replica_ids),
+                    chosen_ids = secrets.SystemRandom().sample(list(candidate_replica_ids),
                         k=min(2, len(candidate_replica_ids)),
                     )
                     yield [self._replicas[chosen_id] for chosen_id in chosen_ids]

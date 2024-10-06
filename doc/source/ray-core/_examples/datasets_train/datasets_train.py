@@ -30,12 +30,12 @@ from ray import train
 from ray.train import Checkpoint, RunConfig
 from ray.data.aggregate import Mean, Std
 from ray.air.integrations.mlflow import MLflowLoggerCallback
+import secrets
 
 
 def make_and_upload_dataset(dir_path):
 
     import os
-    import random
 
     import pandas as pd
     import sklearn.datasets
@@ -72,13 +72,13 @@ def make_and_upload_dataset(dir_path):
         # add some bogus categorical data columns
         options = ["apple", "banana", "orange"]
         df["fruit"] = df.feature_1.map(
-            lambda x: random.choice(options)
+            lambda x: secrets.choice(options)
         )  # bogus, but nice to test categoricals
 
         # add some nullable columns
         options = [None, 1, 2]
         df["nullable_feature"] = df.feature_1.map(
-            lambda x: random.choice(options)
+            lambda x: secrets.choice(options)
         )  # bogus, but nice to test categoricals
 
         # add label column

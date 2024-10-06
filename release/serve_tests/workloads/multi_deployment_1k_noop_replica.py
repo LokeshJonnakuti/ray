@@ -28,7 +28,6 @@ Report:
 import click
 import logging
 import math
-import random
 
 from ray import serve
 from serve_test_utils import (
@@ -44,6 +43,7 @@ from serve_test_cluster_utils import (
     NUM_CONNECTIONS,
 )
 from typing import List, Optional
+import secrets
 
 logger = logging.getLogger(__file__)
 
@@ -84,7 +84,7 @@ def setup_multi_deployment_replicas(num_replicas, num_deployments) -> List[str]:
                     serve.get_app_handle(app) for app in applications
                 ]
 
-            return random.choice(self.all_app_async_handles)
+            return secrets.choice(self.all_app_async_handles)
 
         async def handle_request(self, request, depth: int):
             # Max recursive call depth reached

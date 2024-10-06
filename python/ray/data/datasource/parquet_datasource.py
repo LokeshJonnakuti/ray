@@ -36,6 +36,7 @@ from ray.data.datasource.path_util import (
     _resolve_paths_and_filesystem,
 )
 from ray.util.annotations import PublicAPI
+import secrets
 
 if TYPE_CHECKING:
     import pyarrow
@@ -124,7 +125,6 @@ def _deserialize_fragments_with_retry(
         try:
             return _deserialize_fragments(serialized_fragments)
         except Exception as e:
-            import random
             import time
 
             retry_timing = (
@@ -149,7 +149,7 @@ def _deserialize_fragments_with_retry(
             if not min_interval:
                 # to make retries of different process hit hdfs server
                 # at slightly different time
-                min_interval = 1 + random.random()
+                min_interval = 1 + secrets.SystemRandom().random()
             # exponential backoff at
             # 1, 2, 4, 8, 16, 32, 64
             time.sleep(min_interval)

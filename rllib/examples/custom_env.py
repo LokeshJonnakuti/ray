@@ -17,7 +17,6 @@ import gymnasium as gym
 from gymnasium.spaces import Discrete, Box
 import numpy as np
 import os
-import random
 
 import ray
 from ray import air, tune
@@ -26,6 +25,7 @@ from ray.rllib.utils.framework import try_import_tf, try_import_torch
 from ray.rllib.utils.test_utils import check_learning_achieved
 from ray.tune.logger import pretty_print
 from ray.tune.registry import get_trainable_cls
+import secrets
 
 tf1, tf, tfv = try_import_tf()
 torch, nn = try_import_torch()
@@ -82,7 +82,7 @@ class SimpleCorridor(gym.Env):
         self.reset(seed=config.worker_index * config.num_workers)
 
     def reset(self, *, seed=None, options=None):
-        random.seed(seed)
+        secrets.SystemRandom().seed(seed)
         self.cur_pos = 0
         return [self.cur_pos], {}
 
@@ -96,7 +96,7 @@ class SimpleCorridor(gym.Env):
         # Produce a random reward when we reach the goal.
         return (
             [self.cur_pos],
-            random.random() * 2 if done else -0.1,
+            secrets.SystemRandom().random() * 2 if done else -0.1,
             done,
             truncated,
             {},

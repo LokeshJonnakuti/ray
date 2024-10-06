@@ -1,6 +1,5 @@
 import itertools
 import math
-import random
 import time
 from unittest.mock import patch
 
@@ -15,6 +14,7 @@ from ray.data.context import DataContext
 from ray.data.tests.conftest import *  # noqa
 from ray.data.tests.util import column_udf, named_values
 from ray.tests.conftest import *  # noqa
+import secrets
 
 RANDOM_SEED = 123
 
@@ -312,9 +312,9 @@ def test_groupby_tabular_count(
     # Test built-in count aggregation
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_arrow_count with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     def _to_pandas(ds):
         return ds.map_batches(lambda x: x, batch_size=None, batch_format="pandas")
@@ -340,9 +340,9 @@ def test_groupby_multiple_keys_tabular_count(
 ):
     # Test built-in count aggregation
     print(f"Seeding RNG for test_groupby_arrow_count with: {RANDOM_SEED}")
-    random.seed(RANDOM_SEED)
+    secrets.SystemRandom().seed(RANDOM_SEED)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     ds = ray.data.from_items([{"A": (x % 2), "B": (x % 3)} for x in xs]).repartition(
         num_parts
@@ -369,9 +369,9 @@ def test_groupby_tabular_sum(
     # Test built-in sum aggregation
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_tabular_sum with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     def _to_pandas(ds):
         return ds.map_batches(lambda x: x, batch_size=None, batch_format="pandas")
@@ -441,9 +441,9 @@ def test_groupby_tabular_sum(
 def test_global_tabular_sum(ray_start_regular_shared, ds_format, num_parts):
     seed = int(time.time())
     print(f"Seeding RNG for test_global_arrow_sum with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     def _to_pandas(ds):
         return ds.map_batches(lambda x: x, batch_size=None, batch_format="pandas")
@@ -483,9 +483,9 @@ def test_groupby_tabular_min(ray_start_regular_shared, ds_format, num_parts):
     # Test built-in min aggregation
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_tabular_min with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     def _to_pandas(ds):
         return ds.map_batches(lambda x: x, batch_size=None, batch_format="pandas")
@@ -557,9 +557,9 @@ def test_groupby_tabular_max(ray_start_regular_shared, ds_format, num_parts):
     # Test built-in max aggregation
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_tabular_max with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     def _to_pandas(ds):
         return ds.map_batches(lambda x: x, batch_size=None, batch_format="pandas")
@@ -631,9 +631,9 @@ def test_groupby_tabular_mean(ray_start_regular_shared, ds_format, num_parts):
     # Test built-in mean aggregation
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_tabular_mean with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     def _to_pandas(ds):
         return ds.map_batches(lambda x: x, batch_size=None, batch_format="pandas")
@@ -705,9 +705,9 @@ def test_groupby_tabular_std(ray_start_regular_shared, ds_format, num_parts):
     # Test built-in std aggregation
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_tabular_std with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     def _to_arrow(ds):
         return ds.map_batches(lambda x: x, batch_size=None, batch_format="pyarrow")
@@ -766,9 +766,9 @@ def test_groupby_arrow_multicolumn(ray_start_regular_shared, num_parts):
     # Test built-in mean aggregation on multiple columns
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_arrow_multicolumn with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
     df = pd.DataFrame({"A": [x % 3 for x in xs], "B": xs, "C": [2 * x for x in xs]})
     agg_ds = (
         ray.data.from_pandas(df).repartition(num_parts).groupby("A").mean(["B", "C"])
@@ -841,9 +841,9 @@ def test_groupby_agg_bad_on(ray_start_regular_shared):
 def test_groupby_arrow_multi_agg(ray_start_regular_shared, num_parts):
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_arrow_multi_agg with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
     df = pd.DataFrame({"A": [x % 3 for x in xs], "B": xs})
     agg_ds = (
         ray.data.from_pandas(df)
@@ -898,9 +898,9 @@ def test_groupby_arrow_multi_agg(ray_start_regular_shared, num_parts):
 def test_groupby_arrow_multi_agg_alias(ray_start_regular_shared, num_parts):
     seed = int(time.time())
     print(f"Seeding RNG for test_groupby_arrow_multi_agg with: {seed}")
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
     df = pd.DataFrame({"A": [x % 3 for x in xs], "B": xs})
     agg_ds = (
         ray.data.from_pandas(df)
@@ -1091,9 +1091,9 @@ def test_groupby_map_groups_multicolumn(
 ):
     # Test built-in count aggregation
     print(f"Seeding RNG for test_groupby_arrow_count with: {RANDOM_SEED}")
-    random.seed(RANDOM_SEED)
+    secrets.SystemRandom().seed(RANDOM_SEED)
     xs = list(range(100))
-    random.shuffle(xs)
+    secrets.SystemRandom().shuffle(xs)
 
     ds = ray.data.from_items([{"A": (x % 2), "B": (x % 3)} for x in xs]).repartition(
         num_parts

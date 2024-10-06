@@ -1,11 +1,11 @@
 import gymnasium as gym
 import numpy as np
-import random
 
 from ray.rllib.env.multi_agent_env import MultiAgentEnv, make_multi_agent
 from ray.rllib.examples.env.mock_env import MockEnv, MockEnv2
 from ray.rllib.examples.env.stateless_cartpole import StatelessCartPole
 from ray.rllib.utils.deprecation import Deprecated
+import secrets
 
 
 @Deprecated(
@@ -183,7 +183,7 @@ class FlexAgentsMultiAgent(MultiAgentEnv):
                 self.truncateds.add(i)
 
         # Sometimes, add a new agent to the episode.
-        if random.random() > 0.75 and len(action_dict) > 0:
+        if secrets.SystemRandom().random() > 0.75 and len(action_dict) > 0:
             i = self.spawn()
             obs[i], rew[i], terminated[i], truncated[i], info[i] = self.agents[i].step(
                 action
@@ -194,9 +194,9 @@ class FlexAgentsMultiAgent(MultiAgentEnv):
                 self.truncateds.add(i)
 
         # Sometimes, kill an existing agent.
-        if len(self.agents) > 1 and random.random() > 0.25:
+        if len(self.agents) > 1 and secrets.SystemRandom().random() > 0.25:
             keys = list(self.agents.keys())
-            key = random.choice(keys)
+            key = secrets.choice(keys)
             terminated[key] = True
             del self.agents[key]
 

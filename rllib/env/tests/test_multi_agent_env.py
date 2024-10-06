@@ -1,6 +1,5 @@
 import gymnasium as gym
 import numpy as np
-import random
 import tree  # pip install dm-tree
 import unittest
 
@@ -30,6 +29,7 @@ from ray.rllib.policy.sample_batch import (
 from ray.rllib.tests.test_nested_observation_spaces import NestedMultiAgentEnv
 from ray.rllib.utils.numpy import one_hot
 from ray.rllib.utils.test_utils import check
+import secrets
 
 
 class TestMultiAgentEnv(unittest.TestCase):
@@ -502,8 +502,8 @@ class TestMultiAgentEnv(unittest.TestCase):
 
         def gen_policy():
             config = PPOConfig.overrides(
-                gamma=random.choice([0.5, 0.8, 0.9, 0.95, 0.99]),
-                lr=random.choice([0.001, 0.002, 0.003]),
+                gamma=secrets.choice([0.5, 0.8, 0.9, 0.95, 0.99]),
+                lr=secrets.choice([0.001, 0.002, 0.003]),
             )
             return PolicySpec(config=config)
 

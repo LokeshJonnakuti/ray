@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-import random
 import traceback
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -28,6 +27,7 @@ from ray.serve._private.utils import Timer, TimerBase, format_actor_name
 from ray.serve.config import DeploymentMode, HTTPOptions, gRPCOptions
 from ray.serve.schema import LoggingConfig, ProxyDetails
 from ray.util.scheduling_strategies import NodeAffinitySchedulingStrategy
+import secrets
 
 logger = logging.getLogger(SERVE_LOGGER_NAME)
 
@@ -442,7 +442,7 @@ class ProxyState:
         # seconds since the last health check, perform another health check.
         if self._actor_proxy_wrapper.health_check_ongoing:
             return
-        randomized_period_s = PROXY_HEALTH_CHECK_PERIOD_S * random.uniform(0.9, 1.1)
+        randomized_period_s = PROXY_HEALTH_CHECK_PERIOD_S * secrets.SystemRandom().uniform(0.9, 1.1)
         if self._timer.time() - self._last_health_check_time > randomized_period_s:
             self._last_health_check_time = self._timer.time()
             self._actor_proxy_wrapper.start_new_health_check()

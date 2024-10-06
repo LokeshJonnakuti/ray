@@ -7,7 +7,6 @@ Control the number of agents and policies via --num-agents and --num-policies.
 import argparse
 import gymnasium as gym
 import os
-import random
 
 import ray
 from ray import air
@@ -19,6 +18,7 @@ from ray.rllib.examples.env.multi_agent import MultiAgentCartPole
 from ray.rllib.policy.policy import Policy
 from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.utils.test_utils import check_learning_achieved
+import secrets
 
 tf1, tf, tfv = try_import_tf()
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     policy_ids = list(policies.keys())
 
     def policy_mapping_fn(agent_id, episode, worker, **kwargs):
-        pol_id = random.choice(policy_ids)
+        pol_id = secrets.choice(policy_ids)
         return pol_id
 
     config = (

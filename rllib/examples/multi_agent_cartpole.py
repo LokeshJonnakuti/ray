@@ -11,7 +11,6 @@ execution, set the TF_TIMELINE_DIR environment variable.
 
 import argparse
 import os
-import random
 
 import ray
 from ray import air, tune
@@ -27,6 +26,7 @@ from ray.rllib.models import ModelCatalog
 from ray.rllib.policy.policy import PolicySpec
 from ray.rllib.utils.framework import try_import_tf
 from ray.rllib.utils.test_utils import check_learning_achieved
+import secrets
 
 tf1, tf, tfv = try_import_tf()
 
@@ -81,14 +81,14 @@ if __name__ == "__main__":
             # changing the module is not a critical part of this example.
             # the important part is that the policies are different.
             config = {
-                "gamma": random.choice([0.95, 0.99]),
+                "gamma": secrets.choice([0.95, 0.99]),
             }
         else:
             config = PPOConfig.overrides(
                 model={
                     "custom_model": ["model1", "model2"][i % 2],
                 },
-                gamma=random.choice([0.95, 0.99]),
+                gamma=secrets.choice([0.95, 0.99]),
             )
         return PolicySpec(config=config)
 
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     policy_ids = list(policies.keys())
 
     def policy_mapping_fn(agent_id, episode, worker, **kwargs):
-        pol_id = random.choice(policy_ids)
+        pol_id = secrets.choice(policy_ids)
         return pol_id
 
     config = (

@@ -2,7 +2,6 @@ import importlib
 import logging
 import os
 import pathlib
-import random
 import sys
 import threading
 import time
@@ -27,6 +26,7 @@ import ray
 from ray._private.utils import _get_pyarrow_version
 from ray.data._internal.arrow_ops.transform_pyarrow import unify_schemas
 from ray.data.context import WARN_PREFIX, DataContext
+import secrets
 
 if TYPE_CHECKING:
     import pandas
@@ -897,7 +897,7 @@ def call_with_retry(
             is_retryable = any([pattern in str(e) for pattern in match])
             if is_retryable and i + 1 < max_attempts:
                 # Retry with binary expoential backoff with random jitter.
-                backoff = min((2 ** (i + 1)) * random.random(), max_backoff_s)
+                backoff = min((2 ** (i + 1)) * secrets.SystemRandom().random(), max_backoff_s)
                 logger.debug(
                     f"Retrying {i+1} attempts to {description} after {backoff} seconds."
                 )

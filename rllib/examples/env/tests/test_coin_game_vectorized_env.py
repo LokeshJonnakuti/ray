@@ -3,7 +3,6 @@
 # https://github.com/longtermrisk/marltoolbox
 ##########
 import copy
-import random
 
 import numpy as np
 from ray.rllib.examples.env.coin_game_vectorized_env import (
@@ -13,6 +12,7 @@ from ray.rllib.examples.env.coin_game_vectorized_env import (
 from ray.rllib.examples.env.tests.test_coin_game_non_vectorized_env import (
     assert_obs_is_symmetrical,
 )
+import secrets
 
 # TODO add tests for grid_size != 3
 
@@ -78,7 +78,7 @@ def test_step():
 
         actions = {
             policy_id: [
-                random.randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
+                secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
             ]
             for policy_id in env.players_ids
         }
@@ -101,7 +101,7 @@ def test_multiple_steps():
         for step_i in range(1, n_steps, 1):
             actions = {
                 policy_id: [
-                    random.randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
+                    secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
                 ]
                 for policy_id in env.players_ids
             }
@@ -126,7 +126,7 @@ def test_multiple_episodes():
             step_i += 1
             actions = {
                 policy_id: [
-                    random.randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
+                    secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
                 ]
                 for policy_id in env.players_ids
             }
@@ -717,7 +717,7 @@ def test_get_and_set_env_state():
             step_i += 1
             actions = {
                 policy_id: [
-                    random.randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
+                    secrets.SystemRandom().randint(0, env.NUM_ACTIONS - 1) for _ in range(batch_size)
                 ]
                 for policy_id in env.players_ids
             }

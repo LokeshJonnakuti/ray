@@ -2,7 +2,6 @@ import collections
 import json
 import os
 from pathlib import Path
-import random
 import time
 from typing import Dict, List, Optional
 
@@ -12,6 +11,7 @@ from ray.train.data_parallel_trainer import DataParallelTrainer
 from ray.tune.experiment import Trial
 
 from ray.train.tests.util import create_dict_checkpoint, load_dict_checkpoint
+import secrets
 
 
 RUNNER_TYPE = os.environ.get("RUNNER_TYPE", "trainer")
@@ -100,7 +100,7 @@ def train_fn(config: dict, data: Optional[dict] = None):
         time.sleep(TIME_PER_ITER_S)
 
         with create_dict_checkpoint({"iteration": iteration}) as checkpoint:
-            train.report({"score": random.random()}, checkpoint=checkpoint)
+            train.report({"score": secrets.SystemRandom().random()}, checkpoint=checkpoint)
 
 
 def tuner(experiment_path: str, run_config: train.RunConfig) -> tune.ResultGrid:

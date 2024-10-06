@@ -1,7 +1,6 @@
 import copy
 import json
 import platform
-import random
 import sys
 from datetime import datetime, timedelta
 from unittest.mock import patch
@@ -25,6 +24,7 @@ from ray.tests.conftest import (
     file_system_object_spilling_config,
     mock_distributed_fs_object_spilling_config,
 )
+import secrets
 
 
 def run_basic_workload():
@@ -308,7 +308,7 @@ def test_spill_objects_automatically(fs_only_object_spilling_config, shutdown_on
     for _ in range(buffer_length):
         ref = None
         while ref is None:
-            multiplier = random.choice([1, 2, 3])
+            multiplier = secrets.choice([1, 2, 3])
             arr = np.random.rand(multiplier * 1024 * 1024)
             ref = ray.put(arr)
             replay_buffer.append(ref)
@@ -316,7 +316,7 @@ def test_spill_objects_automatically(fs_only_object_spilling_config, shutdown_on
     print("spill done.")
     # randomly sample objects
     for _ in range(1000):
-        index = random.choice(list(range(buffer_length)))
+        index = secrets.choice(list(range(buffer_length)))
         ref = replay_buffer[index]
         solution = solution_buffer[index]
         sample = ray.get(ref, timeout=None)
@@ -348,7 +348,7 @@ def test_unstable_spill_objects_automatically(unstable_spilling_config, shutdown
 
     # Each object averages 16MiB => 320MiB total.
     for _ in range(buffer_length):
-        multiplier = random.choice([1, 2, 3])
+        multiplier = secrets.choice([1, 2, 3])
         arr = np.random.rand(multiplier * 1024 * 1024)
         ref = ray.put(arr)
         replay_buffer.append(ref)
@@ -356,7 +356,7 @@ def test_unstable_spill_objects_automatically(unstable_spilling_config, shutdown
     print("spill done.")
     # randomly sample objects
     for _ in range(10):
-        index = random.choice(list(range(buffer_length)))
+        index = secrets.choice(list(range(buffer_length)))
         ref = replay_buffer[index]
         solution = solution_buffer[index]
         sample = ray.get(ref, timeout=None)
@@ -386,7 +386,7 @@ def test_slow_spill_objects_automatically(slow_spilling_config, shutdown_only):
     for _ in range(buffer_length):
         ref = None
         while ref is None:
-            multiplier = random.choice([1, 2, 3])
+            multiplier = secrets.choice([1, 2, 3])
             arr = np.random.rand(multiplier * 1024 * 1024)
             ref = ray.put(arr)
             replay_buffer.append(ref)
@@ -394,7 +394,7 @@ def test_slow_spill_objects_automatically(slow_spilling_config, shutdown_only):
     print("spill done.")
     # randomly sample objects
     for _ in range(buffer_length):
-        index = random.choice(list(range(buffer_length)))
+        index = secrets.choice(list(range(buffer_length)))
         ref = replay_buffer[index]
         solution = solution_buffer[index]
         sample = ray.get(ref, timeout=None)

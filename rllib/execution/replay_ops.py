@@ -1,8 +1,8 @@
 from typing import Optional
-import random
 
 from ray.rllib.utils.replay_buffers.replay_buffer import warn_replay_capacity
 from ray.rllib.utils.typing import SampleBatchType
+import secrets
 
 
 # TODO(sven) deprecate this class.
@@ -30,7 +30,7 @@ class SimpleReplayBuffer:
                 self.replay_index %= self.num_slots
 
     def replay(self) -> SampleBatchType:
-        return random.choice(self.replay_batches)
+        return secrets.choice(self.replay_batches)
 
     def __len__(self):
         return len(self.replay_batches)
