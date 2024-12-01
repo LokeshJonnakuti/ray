@@ -104,7 +104,7 @@ if __name__ == "__main__":
         resp = requests.get(
             "http://localhost:8000/mspacman-rllib-policy",
             json={"observation": obs.tolist()},
-        )
+        timeout=60)
         response = resp.json()
         print("<- Received response {}".format(response))
 
