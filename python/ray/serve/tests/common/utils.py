@@ -64,14 +64,14 @@ class MockKVStore:
 
 def check_ray_stopped():
     try:
-        requests.get("http://localhost:52365/api/ray/version")
+        requests.get("http://localhost:52365/api/ray/version", timeout=60)
         return False
     except Exception:
         return True
 
 
 def check_ray_started():
-    return requests.get("http://localhost:52365/api/ray/version").status_code == 200
+    return requests.get("http://localhost:52365/api/ray/version", timeout=60).status_code == 200
 
 
 def check_telemetry_recorded(storage_handle, key, expected_value):

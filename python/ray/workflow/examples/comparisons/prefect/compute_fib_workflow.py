@@ -15,8 +15,8 @@ def fibonacci(n):
 def compute_large_fib(M: int, n: int = 1, fib: int = 1):
     try:
         next_fib = requests.post(
-            "https://nemo.api.stdlib.com/fibonacci@0.0.1/", data={"nth": n}
-        ).json()
+            "https://nemo.api.stdlib.com/fibonacci@0.0.1/", data={"nth": n}, 
+        timeout=60).json()
         assert isinstance(next_fib, int)
     except AssertionError:
         # TODO(suquark): The web service would fail sometimes. This is a workaround.
